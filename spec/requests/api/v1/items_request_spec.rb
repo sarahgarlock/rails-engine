@@ -106,18 +106,6 @@ RSpec.describe 'Items API' do
     expect(item.name).to eq('Updated Item Name')
   end
 
-  # xit 'returns 400 or 404 for a bad merchant ID' do
-
-  #   get "/api/v1/merchants/9999/items"
-
-  #   expect(response).to have_http_status(:not_found).or have_http_status(:bad_request)
-
-  #   data = JSON.parse(response.body, symbolize_names: true)
-
-  #   expect(data).to have_key(:error)
-  #   expect(data[:error]).to eq("Couldn't find Merchant with 'id'=99999")
-  # end
-
   it 'can get the merchant data for a given item id' do
     merchant = create(:merchant)
     item = create(:item, merchant_id: merchant.id)
@@ -136,5 +124,18 @@ RSpec.describe 'Items API' do
     expect(merchant_data[:data]).to have_key(:attributes)
     expect(merchant_data[:data][:attributes]).to have_key(:name)
     expect(merchant_data[:data][:attributes][:name]).to eq(merchant.name)
+  end
+
+  context 'sad path' do
+    it 'returns 404 for bad integer ID' do
+      get "/api/v1/items/9999"
+      
+      expect(response).to have_http_status(:not_found)
+      
+      data = JSON.parse(response.body, symbolize_names: true)
+      
+      expect(data).to have_key(:error)
+      expect(data[:error]).to eq("Couldn't find Item with 'id'=9999")
+    end
   end
 end

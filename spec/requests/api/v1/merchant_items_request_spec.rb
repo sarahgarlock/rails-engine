@@ -79,8 +79,8 @@ RSpec.describe 'Merchant Items API' do
 
       it 'can find all items based on searched merchant' do
         merchant = Merchant.create!(name: 'John Doe')
-        item_1 = Item.create!(name: 'Item 1', merchant_id: merchant.id)
-        item_2 = Item.create!(name: 'Item 2', merchant_id: merchant.id)
+        item1 = Item.create!(name: 'Item 1', merchant_id: merchant.id)
+        item2 = Item.create!(name: 'Item 2', merchant_id: merchant.id)
 
         get '/api/v1/merchants/search?name=John'
 

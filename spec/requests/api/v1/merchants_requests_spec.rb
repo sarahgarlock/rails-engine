@@ -33,10 +33,21 @@ describe "Merchants API" do
     data = JSON.parse(response.body, symbolize_names: true)
     merchant_data = data[:data]
 
-    # binding.pry
     expect(data.count).to eq(1)
 
-    expect(data[:data]).to have_key(:id)
-    expect(data[:data][:attributes][:name]).to be_a String
+    expect(merchant_data).to have_key(:id)
+    expect(merchant_data[:attributes][:name]).to be_a String
+  end
+
+    it 'returns 400 or 404 for a bad merchant ID' do
+
+    get "/api/v1/merchants/99999/items"
+
+    expect(response).to have_http_status(:not_found).or have_http_status(:bad_request)
+
+    data = JSON.parse(response.body, symbolize_names: true)
+
+    expect(data).to have_key(:error)
+    expect(data[:error]).to eq("Couldn't find Merchant with 'id'=99999")
   end
 end
