@@ -22,15 +22,21 @@ describe "Merchants API" do
   end
 
   it 'can get one merchant by its id' do
-    id = create(:merchant).id
+    merchants = create_list(:merchant, 3)
+    merchant_1 = merchants.first
 
-    get "/api/v1/merchants/#{id}"
-
-    merchant = JSON.parse(response.body, symbolize_names: true)
+    get "/api/v1/merchants/#{merchant_1.id}"
 
     expect(response).to be_successful
-    
-    expect(merchant[:data]).to have_key(:id)
-    expect(merchant[:data][:attributes][:name]).to be_a String
+    expect(response.status).to eq(200)
+
+    data = JSON.parse(response.body, symbolize_names: true)
+    merchant_data = data[:data]
+
+    # binding.pry
+    expect(data.count).to eq(1)
+
+    expect(data[:data]).to have_key(:id)
+    expect(data[:data][:attributes][:name]).to be_a String
   end
 end

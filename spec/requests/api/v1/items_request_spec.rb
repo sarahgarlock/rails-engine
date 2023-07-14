@@ -118,7 +118,23 @@ RSpec.describe 'Items API' do
   #   expect(data[:error]).to eq("Couldn't find Merchant with 'id'=99999")
   # end
 
-  it 'can get an items merchant' do
-    
+  it 'can get the merchant data for a given item id' do
+    merchant = create(:merchant)
+    item = create(:item, merchant_id: merchant.id)
+
+    get "/api/v1/items/#{item.id}/merchant"
+
+    expect(response).to be_successful
+    expect(response.status).to eq(200)
+
+    merchant_data = JSON.parse(response.body, symbolize_names: true)
+
+    expect(merchant_data[:data]).to have_key(:id)
+    expect(merchant_data[:data][:id]).to eq(merchant.id.to_s)
+    expect(merchant_data[:data]).to have_key(:type)
+    expect(merchant_data[:data][:type]).to eq('merchant')
+    expect(merchant_data[:data]).to have_key(:attributes)
+    expect(merchant_data[:data][:attributes]).to have_key(:name)
+    expect(merchant_data[:data][:attributes][:name]).to eq(merchant.name)
   end
 end
